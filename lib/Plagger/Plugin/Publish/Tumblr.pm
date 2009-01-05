@@ -66,3 +66,45 @@ sub publish_entry {
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+Plagger::Plugin::Publish::Tumblr - Post to Tumblr
+
+=head1 SYNOPSIS
+
+  - module: Publish::Tumblr
+    config:
+      username: your-email
+      password: your-password
+      type: post type(text, quote, or link)
+      interval: 2
+
+=head1 DESCRIPTION
+
+This plugin automatically posts feed updates to Tumblr
+L<http://www.tumblr.com/>.
+
+You can use 3 types of Post "text", "quote", and "link".
+- text
+    - title
+    - body(added link to the url at the end)
+- quote
+    - quote(body)
+    - source(title linked to the url)
+- link
+    - name(title)
+    - url
+    - description(body)
+
+=head1 AUTHOR
+
+riywo
+
+=head1 SEE ALSO
+
+L<Plagger>
+
+=cut

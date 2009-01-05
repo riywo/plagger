@@ -26,3 +26,28 @@ sub filter {
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+Plagger::Plugin::Filter::TwitterQuote - Making Twitter feed to Tumblr Quote.
+
+=head1 SYNOPSIS
+
+  - module: Filter::TwitterQuote
+
+=head1 DESCRIPTION
+
+This plugin makes twitter feed to tumblr quote.
+L<http://www.tumblr.com/>.
+
+=head1 AUTHOR
+
+riywo
+
+=head1 SEE ALSO
+
+L<Plagger>
+
+=cut
