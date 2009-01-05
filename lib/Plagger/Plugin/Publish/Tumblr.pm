@@ -66,34 +66,3 @@ sub publish_entry {
 }
 
 1;
-
-__END__
-
-=head1 NAME
-
-Plagger::Plugin::Publish::Tumblr - Post to Tumblr
-
-=head1 SYNOPSIS
-
-  - module: Publish::Tumblr
-    config:
-      username: your-email
-      password: your-password
-      type: post type(text, quote, or link)
-      interval: 2
-
-=head1 DESCRIPTION
-
-This plugin automatically posts feed updates to Hatena Bookmark
-L<http://b.hatena.ne.jp/>. It supports automatic tagging as well. It
-might be handy for synchronizing delicious feeds into Hatena Bookmark.
-
-=head1 AUTHOR
-
-riywo
-
-=head1 SEE ALSO
-
-L<Plagger>
-
-=cut
