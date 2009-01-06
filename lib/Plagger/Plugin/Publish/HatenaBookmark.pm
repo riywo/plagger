@@ -32,7 +32,7 @@ sub add_entry {
     my $tag_string = @tags ? join('', map "[$_]", @tags) : '';
 
     my $entry = XML::Atom::Entry->new;
-    $entry->title(encode('utf-8', $args->{entry}->title));
+#    $entry->title(encode('utf-8', $args->{entry}->title)); #removed by riywo
 
     my $link  = XML::Atom::Link->new;
     $link->rel('related');
@@ -55,7 +55,7 @@ sub add_entry {
     my $res = $self->{client}->updateEntry($loc, $entry); # update entry by riywo
 
     my $sleeping_time = $self->conf->{interval} || 3;
-    $context->log(info => "Post $entry->{summary}. sleep $sleeping_time.");
+    $context->log(info => "Post $tag_string. sleep $sleeping_time.");
     sleep( $sleeping_time );
 }
 
