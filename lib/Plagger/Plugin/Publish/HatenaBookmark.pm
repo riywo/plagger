@@ -55,7 +55,7 @@ sub add_entry {
     my $res = $self->{client}->updateEntry($loc, $entry); # update entry by riywo
 
     my $sleeping_time = $self->conf->{interval} || 3;
-    $context->log(info => "Post entry success. sleep $sleeping_time.");
+    $context->log(info => "Post $entry->{summary}. sleep $sleeping_time.");
     sleep( $sleeping_time );
 }
 
