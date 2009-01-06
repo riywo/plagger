@@ -1,4 +1,4 @@
-package Plagger::Plugin::Publish::HatenaBookmark;
+package Plagger::Plugin::Publish::HatenaBookmark2;
 use strict;
 use base qw( Plagger::Plugin );
 
@@ -65,7 +65,7 @@ __END__
 
 =head1 NAME
 
-Plagger::Plugin::Publish::HatenaBookmark - Post to Hatena::Bookmark automatically
+Plagger::Plugin::Publish::HatenaBookmark2 - Post to Hatena::Bookmark automatically
 
 =head1 SYNOPSIS
 
