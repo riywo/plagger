@@ -59,3 +59,31 @@ sub aggregate {
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+Plagger::Plugin::CustomFeed::Twitter - Scraping Twitter HTML.
+
+=head1 SYNOPSIS
+
+  - module: CustomFeed::Twitter
+    - config
+        uri:
+          - http://twitter.com/user/favorites
+
+=head1 DESCRIPTION
+
+This plugin scrapes twitter HTML.
+L<http://www.tumblr.com/>.
+
+=head1 AUTHOR
+
+riywo
+
+=head1 SEE ALSO
+
+L<Plagger>
+
+=cut
