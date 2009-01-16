@@ -36,20 +36,30 @@ sub aggregate {
         process 'td.status-body', 'entry[]' => $entry;
     }->scrape($uri);
 
+    my $myid = scraper {
+	process 'h2.thumb>a', 'url' => '@href';
+    }->scrape($uri);
+    $myid->{url} =~ /^.+?profile_image\/(.+)/o;
+    $myid->{id} = $1;
+
 #    print $res->{entry}[0]->{post};
 
     my $feed = Plagger::Feed->new;
     $feed->type('twitter');
 
     foreach my $line (@{$res->{entry}}){
-        $context->log(debug => $line->{post});
         my $entry  = Plagger::Entry->new;
-        my $post = $line->{id}. ": ". $line->{post};
+        my $id = $line->{id};
+        if($id eq ''){
+	    $id = $myid->{id};
+	}
+        my $post = $id . ": ". $line->{post};
 
+        $context->log(debug => $post);
         my $dt = eval { Plagger::Date->parse_dwim($line->{date}) };
         $entry->date($dt) if $dt;
         $entry->body($post);
-        $entry->author($line->{id});
+        $entry->author($id);
         $entry->title($post);
         $entry->link($line->{url});
         

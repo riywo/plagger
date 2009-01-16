@@ -48,8 +48,10 @@ sub publish_entry {
     return unless $self->{diary};
     
     my $entry_title = $args->{entry}->title_text;
-    $entry_title =~ /^(.+?): (.+)/o;
-    my $post = $2;
+    $entry_title =~ s/\r|\n//g;
+    $entry_title =~ s/^.+?: //o;
+#    $entry_title =~ /^(.+?): (.+)$/o;
+    my $post = $entry_title;
 
     my $date = $args->{entry}->date;
     my $zone = DateTime::TimeZone->new( name => 'GMT' );
@@ -62,7 +64,7 @@ sub publish_entry {
     my $link = $args->{entry}->link;
     
     my $title = "[" . $link . ":title=" . $time . "] " . $post;
-#    $context->log(debug => "$title \n");
+    $context->log(debug => "$title \n");
 
 #    my $body = $self->templatize('template.tt', $args);
     my $uri = $self->{diary}->create({
