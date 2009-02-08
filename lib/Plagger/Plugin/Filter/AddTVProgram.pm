@@ -7,6 +7,7 @@ use Encode;
 use utf8;
 use DateTime;
 use DateTime::Format::Strptime;
+use DateTime::Format::HTTP;
 use XML::Feed;
 
 sub register {
