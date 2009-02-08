@@ -22,11 +22,11 @@ sub filter {
     my ($self, $context, $args) = @_;
     my %channel = (
         'NHK' => 'nhk',
-        'NHK教育' => 'nhked',
+        'NHK教育' => 'etv',
         '日本テレビ' => 'ntv',
         'TBS' => 'tbs',
-        'フジテレビ' => 'fuji',
-        'テレビ朝日' => 'asahi',
+        'フジテレビ' => 'cx',
+        'テレビ朝日' => 'anb',
         'テレビ東京' => 'tx',
     );
     
