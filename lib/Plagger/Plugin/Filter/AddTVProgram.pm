@@ -30,11 +30,6 @@ sub filter {
         'テレビ東京' => 'tx',
     );
     
-    my $date = $args->{entry}->date;
-    my $zone = DateTime::TimeZone->new( name => 'GMT' );
-    my $posttime = DateTime::Format::HTTP->parse_datetime($date, $zone);
-    $posttime->set_time_zone('Asia/Tokyo');
-
     my $tv = XML::Feed->parse(URI->new('http://tv.nikkansports.com/tv.php?mode=04&site=007&lhour=1&category=g&template=rss&area=008&pageCharSet=UTF8'));
     
     foreach my $entry ($tv->entries){
@@ -50,11 +45,13 @@ sub filter {
         $end->set(hour => $strp->parse_datetime($1)->hour);
         $end->set(minute => $strp->parse_datetime($1)->minute);
         
+        my $posttime = $args->{entry}->date;
         if($start <= $posttime && $posttime <= $end){
-            my $name = $3;
-            $name =~ s/\[.+?\]//g if $name !~ /^[.+?]$/;
+            my $name = substr($3, 0, 10);
+            $context->log(debug => $name);
+#            $name =~ s/\[.+?\]//g if $name !~ /^[.+?]$/;
             my $body = $args->{entry}->{body};
-            $args->{entry}->body('【' . $name . '】 '. $body);
+            $args->{entry}->body('【' . $name . '】'. $body);
             last;
         }
     }
