@@ -3,7 +3,8 @@ use strict;
 use base qw( Plagger::Plugin );
 
 use Encode;
-use WWW::HatenaDiary;
+#use WWW::HatenaDiary;
+use WebService::Hatena::Diary;
 
 use DateTime;
 use DateTime::Format::HTTP;
@@ -14,9 +15,9 @@ sub register {
     $context->register_hook(
         $self,
         'plugin.init'      => \&initialize,
-        'publish.init'     => \&publish_init,
+#        'publish.init'     => \&publish_init,
         'publish.entry'    => \&publish_entry,
-        'publish.finalize' => \&publish_finalize,
+#        'publish.finalize' => \&publish_finalize,
     );
 }
 
@@ -25,23 +26,24 @@ sub initialize {
     my $config = {
         username => $self->conf->{username},
         password => $self->conf->{password},
-        group    => $self->conf->{group},
-        mech_opt => {
-            agent => Plagger::UserAgent->new,
-        },
+#        group => $self->conf->{group},
+#        mech_opt => {
+#            agent => Plagger::UserAgent->new,
+#        },
     };
-    $self->{diary} = WWW::HatenaDiary->new($config);
+#    $self->{diary} = WWW::HatenaDiary->new($config);
+    $self->{diary} = WebService::Hatena::Diary->new($config);
 }
 
-sub publish_init {
-    my($self, $context, $args) = @_;
-    local $@;
-    eval { $self->{diary}->login };
-    if ($@) {
-        $context->log(error => $@);
-        delete $self->{diary};
-    }
-}
+#sub publish_init {
+#    my($self, $context, $args) = @_;
+#    local $@;
+#    eval { $self->{diary}->login };
+#    if ($@) {
+#        $context->log(error => $@);
+#        delete $self->{diary};
+#    }
+#}
 
 sub publish_entry {
     my($self, $context, $args) = @_;
@@ -69,6 +71,7 @@ sub publish_entry {
 #    my $body = $self->templatize('template.tt', $args);
     my $uri = $self->{diary}->create({
         title => encode_utf8( $title ),
+        content => "\n",
 #        title => encode_utf8( $args->{entry}->title_text ),
 #        body  => encode_utf8( $args->{entry}->body_text ),
     });
@@ -79,11 +82,11 @@ sub publish_entry {
     sleep( $sleeping_time );
 }
 
-sub publish_finalize {
-    my($self, $context, $args) = @_;
-    return unless $self->{diary};
-    $self->{diary}->{login}->logout;
-}
+#sub publish_finalize {
+#    my($self, $context, $args) = @_;
+#    return unless $self->{diary};
+#    $self->{diary}->{login}->logout;
+#}
 
 1;
 __END__
@@ -116,10 +119,6 @@ Hatena username. Required.
 
 Hatena password. Required.
 
-=item group
-
-Hatena group name. Optional.
-
 =item interval
 
 Optional.
@@ -128,7 +127,7 @@ Optional.
 
 =head1 AUTHOR
 
-Kazuhir Osawa　()(riywo modified)  
+Kazuhir Osawa (riywo modified)
 
 =head1 SEE ALSO
 
