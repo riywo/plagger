@@ -48,12 +48,8 @@ sub initialize {
 sub publish_entry {
     my($self, $context, $args) = @_;
     return unless $self->{diary};
-    
-    my $entry_title = $args->{entry}->title_text;
-    $entry_title =~ s/\r|\n//g;
-    $entry_title =~ s/^.+?: //o;
-#    $entry_title =~ /^(.+?): (.+)$/o;
-    my $post = $entry_title;
+
+    my $post = $args->{entry}->title_text;
 
     my $date = $args->{entry}->date;
     my $zone = DateTime::TimeZone->new( name => 'GMT' );
@@ -64,7 +60,7 @@ sub publish_entry {
 
     my $time = $hh . ":" . $mm;
     my $link = $args->{entry}->link;
-    
+
     my $title = "[" . $link . ":title=" . $time . "] " . $post;
     $context->log(debug => "$title \n");
 
