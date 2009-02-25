@@ -22,6 +22,7 @@ sub register {
 sub initialize {
     my($self, $context) = @_;
     $self->{mech} = WWW::Mechanize->new;
+    $self->{mech}->agent_alias('Linux Mozilla');
     $self->{mech}->get('http://twitter.com');
     $self->{mech}->submit_form(
         form_number => 2,
@@ -33,7 +34,6 @@ sub initialize {
     my $date = $dt->strftime('%Y%m%d%H%M%S');
     $self->{upload_file} = $self->conf->{basefile};
     $self->{upload_file} =~ s/^(.+?)(\..{3})$/$1${date}$2/;
-#    qx{rm -fr "$1"_*};
 }
 
 sub publish_feed {
@@ -72,7 +72,8 @@ sub publish_feed {
         }
     );
 
-    LABEL: foreach my $entry (reverse $args->{feed}->entries){
+    $context->log(debug => "Icontter Search...");
+    foreach my $entry (reverse $args->{feed}->entries){
         my $post = $entry->title_text;
         $post =~ s/@.+? //g;
 
@@ -86,10 +87,11 @@ sub publish_feed {
                     fields => {'profile_image[uploaded_data]' => $self->{upload_file}}
                 );
                 $context->log(debug => "Upload " . $self->{upload_file});
-                last LABEL;
+                return;
             }
         }
     }
+    $context->log(debug => "No Update");
 }
 
 sub annotate {
