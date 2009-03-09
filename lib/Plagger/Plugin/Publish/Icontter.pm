@@ -3,7 +3,7 @@ use strict;
 use base qw( Plagger::Plugin );
 
 use Encode;
-use WWW::Mechanize;
+use WebService::Simple;
 use Image::Magick;
 use utf8;
 use List::Util qw/max/;
@@ -21,14 +21,10 @@ sub register {
 
 sub initialize {
     my($self, $context) = @_;
-    $self->{mech} = WWW::Mechanize->new;
-    $self->{mech}->agent_alias('Linux Mozilla');
-    $self->{mech}->get('http://twitter.com');
-    $self->{mech}->submit_form(
-        form_number => 2,
-        fields      => {
-            'session[username_or_email]' => $self->conf->{username},
-            'session[password]' => $self->conf->{password}});
+    $self->{twit} = WebService::Simple->new(base_url => 'http://twitter.com/');
+    $self->{twit}->credentials('twitter.com:80', 'Twitter API',
+                           $self->conf->{username}, $self->conf->{password});
+
     $self->{base_file} = $self->conf->{basefile};
     my $dt = DateTime->now(time_zone => 'local');
     my $date = $dt->strftime('%Y%m%d%H%M%S');
@@ -38,7 +34,8 @@ sub initialize {
 
 sub publish_feed {
     my($self, $context, $args) = @_;
-    return unless $self->{mech};
+#    return unless $self->{mech};
+    return unless $self->{twit};
     
     my @case = (
         {
@@ -81,12 +78,28 @@ sub publish_feed {
             my $reg = $check->{reg};
             if($post =~ /${reg}/){
                 $check->{prc}->();
-                $self->{mech}->get('http://twitter.com/account/picture');
-                $self->{mech}->submit_form(
-                    form_number => 1,
-                    fields => {'profile_image[uploaded_data]' => $self->{upload_file}}
+                $self->{twit}->post(
+                    'account/update_profile_image.xml',
+                    {file => {image => $self->{upload_file}}},
+                    Content_type => 'form-data'
                 );
                 $context->log(debug => "Upload " . $self->{upload_file});
+                
+#                sleep(10);
+#                $self->{mech}->get('http://twitter.com/account/picture');
+#                my $res = scraper {
+#                    process 'label[for="user_profile_image"]>img', 'link' => '@src';
+#                }->scrape($self->{mech}->content);
+#                eval{$self->{mech}->get($res->{link});};
+#                if ($@ ne ''){
+#                    $context->log(debug => "Upload Miss");
+#                    $self->{mech}->get('http://twitter.com/account/picture');
+#                    $self->{mech}->submit_form(
+#                        form_number => 1,
+#                        fields => {'profile_image[uploaded_data]' => $self->{upload_file}}
+#                    );
+#                    $context->log(debug => "Retry Upload " . $self->{upload_file});
+#                }
                 return;
             }
         }
@@ -159,7 +172,7 @@ Plagger::Plugin::Publish::Icontter
 
 =head1 DESCRIPTION
 
-Icontter
+Icontter needs WebService::Simple with patch(post method)
 
 =head1 AUTHOR
 
